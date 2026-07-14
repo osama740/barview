@@ -94,14 +94,17 @@
     0%,100%{opacity:0.55; transform:translate(-50%,-50%) scale(1);}
     50%{opacity:0.9; transform:translate(-50%,-50%) scale(1.08);}
   }
-  .waves{position:absolute; left:0; right:0; bottom:0; width:100%; line-height:0;}
+  .waves{position:absolute; left:0; right:0; bottom:0; width:100%; line-height:0; pointer-events:none;}
   .waves svg{width:100%; height:auto; display:block;}
-  .wave-back{opacity:0.35; animation: drift 22s linear infinite;}
-  .wave-mid{opacity:0.55; animation: drift 16s linear infinite reverse;}
-  .wave-front{opacity:0.9; animation: drift 26s linear infinite;}
-  @keyframes drift{
-    0%{transform:translateX(0);}
-    100%{transform:translateX(-50%);}
+  .wave-back{opacity:0.35;}
+  .wave-mid{opacity:0.55;}
+  .wave-front{opacity:0.9;}
+  .wave-back{animation: wave-sway 22s ease-in-out infinite;}
+  .wave-mid{animation: wave-sway 16s ease-in-out infinite reverse;}
+  .wave-front{animation: wave-sway 26s ease-in-out infinite;}
+  @keyframes wave-sway{
+    0%,100%{transform:translateX(-3px);}
+    50%{transform:translateX(3px);}
   }
   .glints{position:absolute; inset:0; pointer-events:none;}
   .glint{
@@ -213,21 +216,45 @@
   .nav-inner{
     max-width:1180px; margin:0 auto;
     padding:14px 24px;
-    display:flex; align-items:center; gap:22px;
+    display:flex; align-items:center; gap:0;
+    position:relative;
   }
   .nav-word{
     font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem;
     color:var(--ink); white-space:nowrap; letter-spacing:0.02em;
+    flex-shrink:0; margin-right:22px;
+  }
+  .nav-scroll-wrap{
+    flex:1; position:relative; overflow:hidden; min-width:0;
+    height:38px;
+  }
+  .nav-scroll-fade{
+    position:absolute; top:0; bottom:0; width:40px; z-index:2;
+    pointer-events:none; transition:opacity 0.3s ease;
+  }
+  .nav-scroll-fade--left{
+    left:0;
+    background:linear-gradient(90deg, rgba(244,238,225,0.95), transparent);
+    opacity:0;
+  }
+  .nav-scroll-fade--right{
+    right:0;
+    background:linear-gradient(270deg, rgba(244,238,225,0.95), transparent);
+    opacity:1;
   }
   .nav-pills{
-    flex:1;
     display:flex; gap:6px;
     overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scroll-behavior:smooth;
+    scroll-snap-type:x proximity;
     scrollbar-width:none;
     -ms-overflow-style:none;
+    padding:2px 40px 2px 0;
+    height:100%; align-items:center;
   }
-  .nav-pills::-webkit-scrollbar{display:none;}
   .nav-pill{
+    scroll-snap-align:center;
     white-space:nowrap;
     padding:8px 16px;
     border-radius:100px;
@@ -256,6 +283,7 @@
     font-size:0.82rem;
     font-weight:500;
     flex-shrink:0;
+    margin-left:22px;
     transition:transform 0.3s ease;
   }
   .cart-btn:hover{transform:translateY(-2px);}
@@ -269,6 +297,9 @@
     font-weight:700;
     display:flex; align-items:center; justify-content:center;
     padding:0 5px;
+  }
+  @media (max-width:760px){
+    .nav-word{display:none;}
   }
 
   /* ===== MAIN LAYOUT ===== */
@@ -287,19 +318,37 @@
 
   /* ===== MENU SECTIONS ===== */
   .menu-section{
-    padding:64px 0 20px;
+    padding:40px 0 20px;
     scroll-margin-top:90px;
     border-top:1px solid var(--line);
+    position:relative;
   }
   .menu-section:first-of-type{border-top:none;}
   .section-head{
     display:flex; justify-content:space-between; align-items:flex-end;
-    gap:24px; margin-bottom:34px; flex-wrap:wrap;
+    gap:24px; margin-bottom:24px; flex-wrap:wrap;
   }
   .section-head h3{font-size:clamp(1.7rem,3vw,2.3rem); font-weight:500;}
   .section-tag{
     color:var(--text-soft); font-style:italic; font-weight:300; font-size:0.98rem;
     max-width:340px;
+  }
+  .section-nav{display:flex; gap:6px;}
+  .section-nav button{
+    width:34px; height:34px; border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    font-size:1.1rem;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    transition:all 0.25s ease;
+    flex-shrink:0;
+  }
+  .section-nav button:hover{background:var(--ink); color:var(--cream); border-color:var(--ink);}
+  .section-nav button:disabled{opacity:0.2; cursor:default; pointer-events:none;}
+  @media (max-width:600px){
+    .section-nav{display:none;}
   }
   .grid{
     display:grid;
@@ -536,15 +585,14 @@
     </div>
 
     <div class="hero-cta">
-      <a href="#menu-start" class="btn btn-primary">View the menu</a>
-      <a href="tel:+96176715147" class="btn btn-ghost">Call +961 76 715 147</a>
+      <a href="#menuSections" class="btn btn-primary">View the menu</a>
     </div>
   </div>
 
   <div class="waves">
-    <svg viewBox="0 0 1600 200" preserveAspectRatio="none" class="wave-back"><path d="M0,100 C200,150 400,50 600,100 C800,150 1000,50 1200,100 C1400,150 1600,80 1800,110 L1800,200 L0,200 Z" fill="#6E9A93"/></svg>
-    <svg viewBox="0 0 1600 200" preserveAspectRatio="none" class="wave-mid" style="margin-top:-40px;"><path d="M0,110 C220,60 420,150 640,100 C860,55 1080,140 1300,95 C1500,60 1700,120 1900,100 L1900,200 L0,200 Z" fill="#3C6862"/></svg>
-    <svg viewBox="0 0 1600 200" preserveAspectRatio="none" class="wave-front" style="margin-top:-60px;"><path d="M0,120 C240,80 460,150 680,110 C900,70 1120,140 1340,105 C1520,80 1700,120 1900,105 L1900,200 L0,200 Z" fill="#F4EEE1"/></svg>
+    <svg class="wave-back" viewBox="0 0 1600 200" preserveAspectRatio="none"><path d="M0,100 C200,150 400,50 600,100 C800,150 1000,50 1200,100 C1400,150 1600,80 1600,110 L1600,200 L0,200 Z" fill="#6E9A93"/></svg>
+    <svg class="wave-mid" viewBox="0 0 1600 200" preserveAspectRatio="none" style="margin-top:-30px;"><path d="M0,110 C220,60 420,150 640,100 C860,55 1080,140 1300,95 C1500,60 1600,90 1600,100 L1600,200 L0,200 Z" fill="#3C6862"/></svg>
+    <svg class="wave-front" viewBox="0 0 1600 200" preserveAspectRatio="none" style="margin-top:-50px;"><path d="M0,120 C240,80 460,150 680,110 C900,70 1120,140 1340,105 C1520,80 1600,105 1600,105 L1600,200 L0,200 Z" fill="#F4EEE1"/></svg>
   </div>
 </section>
 
@@ -552,20 +600,18 @@
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
     <span class="nav-word">Barview</span>
-    <div class="nav-pills" id="navPills"></div>
+    <div class="nav-scroll-wrap">
+      <div class="nav-scroll-fade nav-scroll-fade--left" id="navFadeLeft"></div>
+      <div class="nav-scroll-fade nav-scroll-fade--right" id="navFadeRight"></div>
+      <div class="nav-pills" id="navPills"></div>
+    </div>
     <button class="cart-btn" id="cartOpenBtn" aria-label="Open your order">
       Your Order <span class="cart-count" id="cartCount">0</span>
     </button>
   </div>
 </nav>
 
-<div class="intro" id="menu-start">
-  <span class="eyebrow">The Menu</span>
-  <h2>Thirteen small chapters, from <em>first coffee</em> to <em>last shisha</em>.</h2>
-  <p>Everything below is served on the terrace or inside the lounge. Tap a dish to add it to your order, then send it straight to the team when you're ready.</p>
-</div>
-
-<div class="wrap" id="menuSections"></div>
+<div class="wrap" id="menuSections" style="padding-top:24px;"></div>
 
 <!-- CART -->
 <div class="overlay" id="overlay"></div>
@@ -745,6 +791,26 @@ MENU.forEach(sec=>{
   navPills.appendChild(a);
 });
 
+/* ============ CATEGORY SCROLL FADES ============ */
+const navPillsEl = document.getElementById('navPills');
+const navFadeLeft = document.getElementById('navFadeLeft');
+const navFadeRight = document.getElementById('navFadeRight');
+
+function updateNavScrollUI(){
+  if(!navPillsEl) return;
+  const { scrollLeft, scrollWidth, clientWidth } = navPillsEl;
+  const isOverflowing = scrollWidth > clientWidth;
+  const atStart = scrollLeft <= 2;
+  const atEnd = scrollLeft >= scrollWidth - clientWidth - 42;
+
+  navFadeLeft.style.opacity = isOverflowing && !atStart ? '1' : '0';
+  navFadeRight.style.opacity = isOverflowing && !atEnd ? '1' : '0';
+}
+
+navPillsEl.addEventListener('scroll', updateNavScrollUI, {passive:true});
+window.addEventListener('resize', updateNavScrollUI);
+updateNavScrollUI();
+
 /* ============ BUILD MENU SECTIONS ============ */
 const menuRoot = document.getElementById('menuSections');
 const slotElements = {}; // itemId -> the .item-bottom element that holds add/stepper UI
@@ -757,6 +823,10 @@ MENU.forEach(sec=>{
   section.innerHTML = `
     <div class="section-head">
       <h3>${sec.name}</h3>
+      <div class="section-nav">
+        <button data-prev="${sec.id}" aria-label="Previous section">‹</button>
+        <button data-next="${sec.id}" aria-label="Next section">›</button>
+      </div>
       <p class="section-tag">${sec.tag}</p>
     </div>
     <div class="grid"></div>
@@ -782,6 +852,37 @@ MENU.forEach(sec=>{
 
   menuRoot.appendChild(section);
 });
+
+/* ============ SECTION PREV/NEXT NAV ============ */
+document.querySelectorAll('[data-prev]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const secId = btn.dataset.prev;
+    const idx = MENU.findIndex(s => s.id === secId);
+    if (idx > 0) {
+      document.getElementById('sec-' + MENU[idx-1].id).scrollIntoView({behavior:'smooth'});
+    }
+  });
+});
+document.querySelectorAll('[data-next]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const secId = btn.dataset.next;
+    const idx = MENU.findIndex(s => s.id === secId);
+    if (idx < MENU.length - 1) {
+      document.getElementById('sec-' + MENU[idx+1].id).scrollIntoView({behavior:'smooth'});
+    }
+  });
+});
+function updateNavButtons(){
+  document.querySelectorAll('.menu-section').forEach(sec => {
+    const secId = sec.id.replace('sec-','');
+    const idx = MENU.findIndex(s => s.id === secId);
+    const prev = sec.querySelector('[data-prev]');
+    const next = sec.querySelector('[data-next]');
+    if(prev) prev.disabled = idx <= 0;
+    if(next) next.disabled = idx >= MENU.length - 1;
+  });
+}
+updateNavButtons();
 
 function renderSlot(itemId, name, price, sectionName){
   const slot = slotElements[itemId];
@@ -912,7 +1013,13 @@ function onScroll(){
     const rect = sec.getBoundingClientRect();
     if(rect.top < 160 && rect.bottom > 160) current = sec.id;
   });
-  pills.forEach(p=>p.classList.toggle('active', current && p.dataset.sec === current.replace('sec-','')));
+  pills.forEach(p=>{
+    const isActive = current && p.dataset.sec === current.replace('sec-','');
+    p.classList.toggle('active', isActive);
+    if(isActive && navPillsEl){
+      p.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+    }
+  });
 }
 window.addEventListener('scroll', onScroll, {passive:true});
 onScroll();
