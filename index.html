@@ -75,23 +75,6 @@
     0%{opacity:0; transform:translateY(20px) scale(0.94);}
     100%{opacity:1; transform:translateY(0) scale(1);}
   }
-  .splash-logo{
-    width:72px;
-    height:72px;
-    margin:0 auto 24px;
-    border-radius:50%;
-    background:linear-gradient(135deg, var(--gold-soft), var(--gold));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 12px 40px rgba(183,146,74,0.4);
-    animation:logo-pulse 2.4s ease-in-out infinite;
-  }
-  @keyframes logo-pulse{
-    0%,100%{box-shadow:0 12px 40px rgba(183,146,74,0.4);}
-    50%{box-shadow:0 12px 56px rgba(183,146,74,0.6);}
-  }
-  .splash-logo svg{width:32px; height:32px;}
   .splash-welcome{
     font-size:0.78rem;
     letter-spacing:0.28em;
@@ -718,9 +701,6 @@
 <!-- SPLASH SCREEN -->
 <div class="splash" id="splash">
   <div class="splash-card">
-    <div class="splash-logo">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm-1 13.5V12H8l4-4.5L16 12h-3v4.5h-2z" fill="#1B2F27"/></svg>
-    </div>
     <p class="splash-welcome">Welcome to</p>
     <h2 class="splash-brand">Bar<em>view</em></h2>
     <p class="splash-sub">Barja · Lebanese Coast</p>
