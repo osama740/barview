@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Barview — Barja</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -32,6 +32,116 @@
     font-family:'Work Sans', sans-serif;
     font-weight:400;
     -webkit-font-smoothing:antialiased;
+  }
+
+  /* ===== SPLASH SCREEN ===== */
+  .splash{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(16,40,43,0.85);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    opacity:1;
+    transition:opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
+    will-change:opacity, transform;
+  }
+  .splash.hide{
+    opacity:0;
+    transform:scale(0.92);
+    pointer-events:none;
+  }
+  .splash.removed{
+    visibility:hidden;
+  }
+  .splash-card{
+    text-align:center;
+    padding:52px 48px;
+    background:rgba(244,238,225,0.08);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    border:1px solid rgba(247,242,228,0.15);
+    border-radius:24px;
+    box-shadow:0 30px 80px rgba(16,40,43,0.5), inset 0 1px 0 rgba(247,242,228,0.12);
+    max-width:340px;
+    width:90%;
+    transform:translateY(0) scale(1);
+    animation:splash-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes splash-in{
+    0%{opacity:0; transform:translateY(20px) scale(0.94);}
+    100%{opacity:1; transform:translateY(0) scale(1);}
+  }
+  .splash-logo{
+    width:72px;
+    height:72px;
+    margin:0 auto 24px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--gold-soft), var(--gold));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 12px 40px rgba(183,146,74,0.4);
+    animation:logo-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes logo-pulse{
+    0%,100%{box-shadow:0 12px 40px rgba(183,146,74,0.4);}
+    50%{box-shadow:0 12px 56px rgba(183,146,74,0.6);}
+  }
+  .splash-logo svg{width:32px; height:32px;}
+  .splash-welcome{
+    font-size:0.78rem;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    font-weight:500;
+    margin-bottom:8px;
+    opacity:0.9;
+  }
+  .splash-brand{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    color:#F7F2E4;
+    font-weight:500;
+    line-height:1.05;
+    letter-spacing:0.02em;
+    margin-bottom:6px;
+  }
+  .splash-brand em{
+    font-style:italic;
+    font-weight:300;
+    color:var(--gold-soft);
+  }
+  .splash-sub{
+    font-size:0.88rem;
+    color:rgba(247,242,228,0.5);
+    font-weight:300;
+    letter-spacing:0.02em;
+  }
+  .splash-loader{
+    margin:32px auto 0;
+    width:36px;
+    height:3px;
+    border-radius:3px;
+    background:rgba(247,242,228,0.1);
+    overflow:hidden;
+    position:relative;
+  }
+  .splash-loader span{
+    display:block;
+    height:100%;
+    width:0%;
+    border-radius:3px;
+    background:linear-gradient(90deg, var(--gold-soft), var(--gold));
+    animation:load-bar 2s ease-in-out forwards;
+  }
+  @keyframes load-bar{
+    0%{width:0%;}
+    50%{width:65%;}
+    100%{width:100%;}
   }
 
   /* ===== CINEMATIC BACKGROUND VIDEO ===== */
@@ -605,6 +715,19 @@
 </head>
 <body>
 
+<!-- SPLASH SCREEN -->
+<div class="splash" id="splash">
+  <div class="splash-card">
+    <div class="splash-logo">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm-1 13.5V12H8l4-4.5L16 12h-3v4.5h-2z" fill="#1B2F27"/></svg>
+    </div>
+    <p class="splash-welcome">Welcome to</p>
+    <h2 class="splash-brand">Bar<em>view</em></h2>
+    <p class="splash-sub">Barja · Lebanese Coast</p>
+    <div class="splash-loader"><span></span></div>
+  </div>
+</div>
+
 <!-- CINEMATIC BACKGROUND VIDEO -->
 <div class="bg-video-wrap">
   <video autoplay muted loop playsinline poster="barview%20intro%20video.mp4">
@@ -723,6 +846,26 @@
 </footer>
 
 <script>
+/* ============ SPLASH SCREEN ============ */
+(function(){
+  const splash = document.getElementById('splash');
+  const html = document.documentElement;
+
+  // Disable scrolling
+  html.style.overflow = 'hidden';
+
+  // After 2s, fade out over 500ms, then remove
+  setTimeout(() => {
+    splash.classList.add('hide');
+    // Re-enable scrolling
+    html.style.overflow = '';
+    // Remove from DOM after transition completes
+    setTimeout(() => {
+      splash.style.display = 'none';
+    }, 500);
+  }, 2000);
+})();
+
 /* ============ MENU DATA ============ */
 const MENU = [
   { id:"smoothies", name:"Smoothies", tag:"Fresh fruit, blended slow, served cold.", items:[
