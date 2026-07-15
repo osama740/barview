@@ -27,11 +27,54 @@
   html{scroll-behavior:smooth;}
   body{
     margin:0;
-    background:var(--cream);
+    background:var(--ink);
     color:var(--text);
     font-family:'Work Sans', sans-serif;
     font-weight:400;
     -webkit-font-smoothing:antialiased;
+  }
+
+  /* ===== CINEMATIC BACKGROUND VIDEO ===== */
+  .bg-video-wrap{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    z-index:-1;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .bg-video-wrap video{
+    position:absolute;
+    top:50%;
+    left:50%;
+    min-width:100%;
+    min-height:100%;
+    width:auto;
+    height:auto;
+    transform:translate(-50%,-50%);
+    object-fit:cover;
+  }
+  .bg-video-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(16,40,43,0.6);
+    backdrop-filter: blur(2px);
+    z-index:1;
+  }
+  .bg-video-shimmer{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    background:radial-gradient(ellipse 70% 50% at 50% 30%, rgba(216,194,147,0.06), transparent 70%);
+    pointer-events:none;
+  }
+
+  /* ===== BODY OVERLAY FOR CINEMATIC FEEL ===== */
+  .page-wrap{
+    position:relative;
+    z-index:1;
+    min-height:100vh;
   }
   h1,h2,h3,.display{
     font-family:'Fraunces', serif;
@@ -566,6 +609,17 @@
 </head>
 <body>
 
+<!-- CINEMATIC BACKGROUND VIDEO -->
+<div class="bg-video-wrap">
+  <video autoplay muted loop playsinline poster="barview%20intro%20video.mp4">
+    <source src="barview%20intro%20video.mp4" type="video/mp4">
+  </video>
+  <div class="bg-video-overlay"></div>
+  <div class="bg-video-shimmer"></div>
+</div>
+
+<div class="page-wrap">
+
 <div class="tideline"><div class="tideline-fill" id="tideFill"></div></div>
 
 <!-- HERO -->
@@ -1026,5 +1080,8 @@ for(let i=0;i<18;i++){
 
 renderCart();
 </script>
+
+</div><!-- .page-wrap -->
+
 </body>
 </html>
