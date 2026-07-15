@@ -625,10 +625,8 @@
   </div>
   <div class="drawer-foot">
     <div class="sum-row"><span>Subtotal</span><span id="sumSubtotal">$0.00</span></div>
-    <div class="sum-row"><span>Service</span><span>Included</span></div>
     <div class="sum-total"><span>Total</span><span id="sumTotal">$0.00</span></div>
-    <button class="place-btn" id="placeBtn" disabled>Place Order</button>
-    <p class="drawer-note">Orders are confirmed by our floor team on arrival or by phone — no card details needed here.</p>
+    <p class="drawer-note">Orders are taken directly by our runners — no online orders or card details needed.</p>
   </div>
 </aside>
 
@@ -920,8 +918,6 @@ const drawerBody = document.getElementById('drawerBody');
 const cartCount = document.getElementById('cartCount');
 const sumSubtotal = document.getElementById('sumSubtotal');
 const sumTotal = document.getElementById('sumTotal');
-const placeBtn = document.getElementById('placeBtn');
-
 function renderCart(){
   const ids = Object.keys(cart);
   const totalQty = ids.reduce((s,id)=>s+cart[id].qty,0);
@@ -929,7 +925,6 @@ function renderCart(){
 
   if(ids.length === 0){
     drawerBody.innerHTML = `<div class="drawer-empty">Your order is quiet for now.<br>Add something from the menu.</div>`;
-    placeBtn.disabled = true;
   } else {
     drawerBody.innerHTML = ids.map(id=>{
       const it = cart[id];
@@ -957,7 +952,6 @@ function renderCart(){
         changeQty(id, cart[id].name, cart[id].price, cart[id].sectionName, 1);
       });
     });
-    placeBtn.disabled = false;
   }
 
   const subtotal = ids.reduce((s,id)=>s + cart[id].price*cart[id].qty, 0);
@@ -977,18 +971,9 @@ document.getElementById('cartOpenBtn').addEventListener('click', openDrawer);
 document.getElementById('drawerClose').addEventListener('click', closeDrawer);
 overlay.addEventListener('click', closeDrawer);
 
-/* ============ CONFIRM ORDER ============ */
+/* ============ CONFIRM MODAL ============ */
 const confirmModal = document.getElementById('confirmModal');
 const confirmText = document.getElementById('confirmText');
-placeBtn.addEventListener('click', ()=>{
-  const ids = Object.keys(cart);
-  if(ids.length === 0) return;
-  const subtotal = ids.reduce((s,id)=>s + cart[id].price*cart[id].qty, 0);
-  const totalItems = ids.reduce((s,id)=>s+cart[id].qty,0);
-  confirmText.textContent = `We've noted ${totalItems} item${totalItems>1?'s':''} for ${money(subtotal)}. Show this screen to your server, or call +961 76 715 147 to confirm.`;
-  confirmModal.classList.add('show');
-  closeDrawer();
-});
 document.getElementById('confirmClose').addEventListener('click', ()=>confirmModal.classList.remove('show'));
 document.getElementById('confirmBackdrop').addEventListener('click', ()=>confirmModal.classList.remove('show'));
 
