@@ -372,10 +372,6 @@
     gap:24px; margin-bottom:24px; flex-wrap:wrap;
   }
   .section-head h3{font-size:clamp(1.7rem,3vw,2.3rem); font-weight:500;}
-  .section-tag{
-    color:var(--text-soft); font-style:italic; font-weight:300; font-size:0.98rem;
-    max-width:340px;
-  }
   .section-nav{display:flex; gap:6px;}
   .section-nav button{
     width:34px; height:34px; border-radius:50%;
@@ -879,7 +875,6 @@ MENU.forEach(sec=>{
         <button data-prev="${sec.id}" aria-label="Previous section">‹</button>
         <button data-next="${sec.id}" aria-label="Next section">›</button>
       </div>
-      <p class="section-tag">${sec.tag}</p>
     </div>
     <div class="grid"></div>
   `;
